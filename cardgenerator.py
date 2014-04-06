@@ -8,7 +8,7 @@ import textwrap
 CHARS_PER_LINE = 20
 FONT_PATH = "/Library/Fonts/Arial.ttf"
 BODY_SIZE = 72
-FOOTER_SIZE = 36
+FOOTER_SIZE = 18
 
 class CardGenerator(object):
   def __init__(self, config):
@@ -47,8 +47,14 @@ class CardGenerator(object):
 
     # draw footer
     footer_font = ImageFont.truetype("/Library/Fonts/Arial.ttf", FOOTER_SIZE)
-    footer_offset = self.card_dimensions[1] - self.padding - footer_font.getsize(line)[1]
-    draw.text((self.padding, footer_offset), self.footer_text, font=footer_font, fill=self.foreground_color)
+    footer_img = Image.open('input/logo.png','r')
+    footer_img_offset = self.card_dimensions[1] - self.padding - footer_img.size[1] / 2 - footer_font.getsize(self.footer_text)[1] / 2
+
+    card.paste(footer_img, (self.padding, footer_img_offset), footer_img)
+
+    footer_text_left_offset = self.padding + footer_img.size[0] + self.padding / 3
+    footer_text_top_offset = self.card_dimensions[1] - self.padding - footer_font.getsize(line)[1]
+    draw.text((footer_text_left_offset, footer_text_top_offset), self.footer_text, font=footer_font, fill=self.foreground_color)
     
     return card
 
