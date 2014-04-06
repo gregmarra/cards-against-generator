@@ -3,6 +3,10 @@ cards-against-generator
 
 Helps make Cards Against Humanity style playing cards.
 
+Custom Printing
+---------------
+Cards Against Humanity cards are 63mm wide by 88mm tall. The "Poker Size Custom Cards (Blank Cards)" from http://www.printerstudio.com/personalized/custom-playing-cards-gifts.html are 63.5mm x 89mm. This makes them a slightly different size, but nearly the same!
+
 Usage
 -----
 - Make input cards files in `/cards`, probably like `white.txt` and `black.txt`
@@ -27,4 +31,3 @@ https://pypi.python.org/pypi/Pillow/2.2.1
 
 ### Fixing Issues
 - http://stackoverflow.com/questions/22313407/clang-error-unknown-argument-mno-fused-madd-python-package-installation-fa helped fix a `clang error: unknown argument: '-mno-fused-madd'` error.
-
