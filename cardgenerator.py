@@ -5,11 +5,17 @@ from PIL import ImageDraw
 from PIL import ImageFont
 import textwrap
 
+CHARS_PER_LINE = 20
+FONT_PATH = "/Library/Fonts/Arial.ttf"
+BODY_SIZE = 72
+FOOTER_SIZE = 36
+
 class CardGenerator(object):
   def __init__(self, config):
     self.save_folder = config["save_folder"]
     self.color = config["color"]
     self.card_dimensions = config["card_dimensions_px"]
+    self.footer_text = config["footer_text"]
     self.index = 0
     self.padding = config["card_padding_px"]
     super(CardGenerator, self).__init__()
@@ -19,7 +25,7 @@ class CardGenerator(object):
     if self.color == "white":
       return (255, 255, 255, 255)
     else:
-      return (0, 0, 0, 0)
+      return (0, 0, 0, 255)
 
   @property
   def foreground_color(self):
@@ -33,16 +39,16 @@ class CardGenerator(object):
     draw = ImageDraw.Draw(card)
 
     # draw words
-    body_font = ImageFont.truetype("/Library/Fonts/Arial.ttf", 72)
+    body_font = ImageFont.truetype(FONT_PATH, BODY_SIZE)
     offset = self.padding
-    for line in textwrap.wrap(text, width=20):
+    for line in textwrap.wrap(text, width=CHARS_PER_LINE):
         draw.text((self.padding, offset), line, font=body_font, fill=self.foreground_color)
         offset += body_font.getsize(line)[1]
 
     # draw footer
-    footer_font = ImageFont.truetype("/Library/Fonts/Arial.ttf", 36)
-    bottom_offset = self.card_dimensions[1] - self.padding - footer_font.getsize(line)[1]
-    draw.text((self.padding, bottom_offset), "Cards against Olin", font=footer_font, fill=self.foreground_color)
+    footer_font = ImageFont.truetype("/Library/Fonts/Arial.ttf", FOOTER_SIZE)
+    footer_offset = self.card_dimensions[1] - self.padding - footer_font.getsize(line)[1]
+    draw.text((self.padding, footer_offset), self.footer_text, font=footer_font, fill=self.foreground_color)
     
     return card
 
@@ -52,6 +58,19 @@ class CardGenerator(object):
     card = self.makeCard(words)
     card.save(os.path.join(self.save_folder, filename))
 
-  def writeBlank(self):
-    card = Image.new("RGBA", (CARD_WIDTH_PX, CARD_HEIGHT_PX), (255,255,255,255))
-    card.save(os.path.join(self.save_folder, "blank.card.png"))
+  def makeBack(self):
+    card = Image.new("RGBA", (self.card_dimensions[0], self.card_dimensions[1]), self.background_color)
+    draw = ImageDraw.Draw(card)
+
+    # draw words
+    body_font = ImageFont.truetype(FONT_PATH, BODY_SIZE * 2)
+    offset = self.padding
+    for line in self.footer_text.split(" "):
+        draw.text((self.padding, offset), line, font=body_font, fill=self.foreground_color)
+        offset += body_font.getsize(line)[1] + 24
+
+    return card
+
+  def writeBack(self):
+    card = self.makeBack()
+    card.save(os.path.join(self.save_folder, "back.{}.png".format(self.color)))
