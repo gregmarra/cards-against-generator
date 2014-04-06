@@ -8,11 +8,6 @@ CONFIG = {
   "card_padding_px": 64,
 }
 
-DEMO_CARDS = [
-  "Raptor attacks.",
-  "During high school, I never really fit in until I found _ club.",
-]
-
 def munge_text(text):
   return text.replace("_", "__________")
 
@@ -22,13 +17,12 @@ def main():
                     help="color scheme. white or black")
   parser.add_option("-f", "--footer_text", type="string", default="Cards Against Cards",
                     help="text for footer.")
-  parser.add_option("-i", "--input_file", type="string", default="input.txt",
+  parser.add_option("-i", "--input_file", type="string", default="input/demo_cards",
                     help="file to read from")
   parser.add_option("-l", "--footer_logo", type="string", default="source/logo.png",
                     help="logo for footer.")
   parser.add_option("-s", "--save_folder", type="string", default="cards",
                     help="folder to save output to")
-
   
   options, args = parser.parse_args()
 
@@ -40,13 +34,14 @@ def main():
   
   cg = CardGenerator(config)
 
-  for card in DEMO_CARDS:
-    text = munge_text(card)
-    cg.writeCard(text)
+  with open(options.input_file, 'r') as f:
+    for card in f.readlines():
+      text = munge_text(card)
+      cg.writeCard(text)
 
   cg.writeBack()
 
-  print("done.")
+  print("Created {} cards from {}, saved to {}".format(options.color, options.input_file, options.save_folder))
 
 if __name__ == '__main__':
     main()
