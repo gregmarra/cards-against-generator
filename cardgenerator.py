@@ -53,7 +53,7 @@ class CardGenerator(object):
     return card
 
   def writeCard(self, words):
-    filename = u"{}.png".format(self.index)
+    filename = u"{}.{}.png".format(self.index, self.color)
     self.index += 1
     card = self.makeCard(words)
     card.save(os.path.join(self.save_folder, filename))
