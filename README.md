@@ -17,3 +17,14 @@ Customization
 -------------
 - You can specify a custom logo with `--footer-logo`
 - You can specify custom footer text with `--footer-text`
+
+Stuff I had to do to get PIL to work
+------------------------------------
+You have to install the PIL imaging library, but it is mostly abandoned, so you have to install Pillow instead.
+
+### Installing Pillow
+https://pypi.python.org/pypi/Pillow/2.2.1
+
+### Fixing Issues
+- http://stackoverflow.com/questions/22313407/clang-error-unknown-argument-mno-fused-madd-python-package-installation-fa helped fix a `clang error: unknown argument: '-mno-fused-madd'` error.
+
